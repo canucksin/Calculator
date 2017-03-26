@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var currentCalculation: UILabel!
     
     var userIsInTheMiddleOfTyping = false
     
@@ -34,6 +35,16 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func backspace(_ sender: UIButton) {
+        if userIsInTheMiddleOfTyping {
+            display.text!.remove(at: display.text!.index(before: display.text!.endIndex))
+            if (display.text!.isEmpty) {
+                displayValue = 0
+                userIsInTheMiddleOfTyping = false
+            }
+        }
+    }
+    
     private var brain = CalculatorBrain()
     
     @IBAction func performOperation(_ sender: UIButton) {
@@ -47,6 +58,16 @@ class ViewController: UIViewController {
             if let result = brain.result {
                 displayValue = result
             }
+        }
+        currentCalculation.text = brain.description
+        if (currentCalculation.text != " ") {
+            if (brain.resultIsPending) {
+                currentCalculation.text! += "..."
+            } else {
+                currentCalculation.text! += "="
+            }
+        } else {
+            displayValue = 0
         }
     }
 }
